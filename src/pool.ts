@@ -93,11 +93,11 @@ export class TaskPool extends EventEmitter {
 
   private nextTask() {
     const next = this.queue.shift();
-    if (next === undefined || this.queue.length === 0) {
+    if (next === undefined && this.queue.length === 0) {
       if (this.running.size === 0) {
         this.emit('completed');
       }
-    } else {
+    } else if (next !== undefined) {
       this.runTask(next);
     }
   }
