@@ -52,14 +52,27 @@ export class TaskPool extends EventEmitter {
     this.on('done', this.nextTask);
   }
 
+  addTask(task: Task | Task[]) {
+    if (task instanceof Task) {
+      this.tasks.push(task);
+    } else if (task instanceof Array) {
+      task.forEach((t: Task) => {
+        if (!(t instanceof Task)) {
+          throw new TypeError('Invalid task');
+        }
+        this.tasks.push(t);
+      });
+    } else {
+      throw new TypeError('Invalid task');
+    }
+  }
+
   async exec() {
     if (this.tasks.length === 0) {
       return this.resolutions;
     }
 
-    if (this.isRunning) {
-      throw new Error('Task pool is executing');
-    }
+    this.checkRunningState();
 
     return this.run();
   }
@@ -126,5 +139,11 @@ export class TaskPool extends EventEmitter {
         }
       }
     });
+  }
+
+  private checkRunningState() {
+    if (this.isRunning) {
+      throw new Error('Task pool is executing');
+    }
   }
 }
