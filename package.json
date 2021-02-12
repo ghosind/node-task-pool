@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
-    "test": "nyc mocha",
+    "test": "nyc mocha && nyc merge .nyc_output coverage.json",
     "lint": "eslint --fix"
   },
   "repository": {
