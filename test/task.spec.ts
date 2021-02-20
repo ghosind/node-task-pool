@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import assert from 'assert';
 
-import { Task } from '../lib';
+import { Task } from '../src';
 
 describe('Task class test', () => {
   it('no argument task', () => {

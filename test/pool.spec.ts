@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import assert from 'assert';
 
-import { Task, TaskPool } from '../lib';
+import { Task, TaskPool } from '../src';
 
 // eslint-disable-next-line max-lines-per-function
 describe('Pool class test', () => {
