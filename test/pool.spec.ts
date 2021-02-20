@@ -43,7 +43,7 @@ describe('Pool class test', () => {
 
     await pool.exec();
 
-    assert.deepStrictEqual([0, 1, 2, 3, 4], result);
+    assert.deepStrictEqual(result, [0, 1, 2, 3, 4]);
   });
 
   it('asynchronous task pool execution', async () => {
@@ -63,7 +63,7 @@ describe('Pool class test', () => {
 
     const ret = await pool.exec();
 
-    assert.deepStrictEqual([0, 1, 2, 3, 4], ret);
+    assert.deepStrictEqual(ret, [0, 1, 2, 3, 4]);
   });
 
   it('asynchronous task pool return order', async () => {
@@ -85,7 +85,7 @@ describe('Pool class test', () => {
 
     await pool.exec();
 
-    assert.deepStrictEqual([1, 3, 0, 2, 4], result);
+    assert.deepStrictEqual(result, [1, 3, 0, 2, 4]);
   });
 
   it('synchronous and asynchronous mixed task pool execution', async () => {
@@ -111,7 +111,7 @@ describe('Pool class test', () => {
 
     const ret = await pool.exec();
 
-    assert.deepStrictEqual([0, 1, 2, 3, 4], ret);
+    assert.deepStrictEqual(ret, [0, 1, 2, 3, 4]);
   });
 
   it('synchronous and asynchronous mixed task pool resolve order', async () => {
@@ -140,7 +140,7 @@ describe('Pool class test', () => {
 
     await pool.exec();
 
-    assert.deepStrictEqual([1, 3, 0, 2, 4], result);
+    assert.deepStrictEqual(result, [1, 3, 0, 2, 4]);
   });
 
   it('re-run when pool is running', () => {
@@ -177,6 +177,56 @@ describe('Pool class test', () => {
     const pool = new TaskPool(tasks, { size: 2 });
 
     const ret = await pool.exec();
-    assert.deepStrictEqual([0, 1, 2, 3, 4], ret);
+    assert.deepStrictEqual(ret, [0, 1, 2, 3, 4]);
+  });
+
+  it('add a task', async () => {
+    const func = (val: number) => new Promise((resolve: Function) => {
+      setTimeout(() => {
+        resolve(val);
+      }, 100);
+    });
+    const tasks: Task[] = [new Task(func, 0)];
+    const pool = new TaskPool(tasks);
+
+    pool.addTask(new Task(func, 1));
+
+    const ret = await pool.exec();
+
+    assert.deepStrictEqual(ret, [0, 1]);
+  });
+
+  it('add an invalid task', async () => {
+    const pool = new TaskPool();
+
+    assert.throws(() => {
+      // @ts-ignore
+      pool.addTask(null);
+    });
+  });
+
+  it('add a task array', async () => {
+    const func = (val: number) => new Promise((resolve: Function) => {
+      setTimeout(() => {
+        resolve(val);
+      }, 100);
+    });
+    const tasks: Task[] = [new Task(func, 0)];
+    const pool = new TaskPool(tasks);
+
+    pool.addTask([new Task(func, 1), new Task(func, 2)]);
+
+    const ret = await pool.exec();
+
+    assert.deepStrictEqual(ret, [0, 1, 2]);
+  });
+
+  it('add an invalid array', async () => {
+    const pool = new TaskPool();
+
+    assert.throws(() => {
+      // @ts-ignore
+      pool.addTask([null]);
+    });
   });
 });
