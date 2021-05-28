@@ -17,13 +17,48 @@ Using NPM:
 npm install --save @antmind/task-pool
 ```
 
-## Getting Start
+## Getting Started
 
 ```ts
 import { Task, TaskPool } from '@antmind/task-pool';
 
-const pool = new TaskPool({ size: 5 });
-pool.addTask(new Task((val: any) -> { console.log('hello', val) }, 'world'));
+const pool = new TaskPool({ size: 3 });
+
+for (let i = 5; i > 0; i -= 1) {
+  pool.addTask(
+    new Task((val: any) => {
+      return new Promise((resolve: Function) => {
+        setTimeout(() => { console.log(`num: ${val}`); }, val * 100);
+      });
+    ),
+    i,
+  );
+}
 
 pool.exec();
+// num: 3
+// num: 4
+// num: 5
+// num: 2
+// num: 1
 ```
+
+## Configurations
+
+- `size`: The concurrency size of execution, default `30`.
+
+## Class `TaskPool`
+
+- `addTask(task: Task | Task[]): void`
+
+  Add a task or tasks array into task pool.
+
+- `exec(): Promise<T[]>`
+
+  Execute all tasks in the pool, and it'll return a result array after executing.
+
+## Class `Task`
+
+- `exec(): any`
+
+  Execute this task.
