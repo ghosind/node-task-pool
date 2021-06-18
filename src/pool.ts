@@ -2,15 +2,18 @@ import { EventEmitter } from 'events';
 import { Task } from './task';
 
 interface TaskPoolOptions {
-  size: number;
+  /**
+   * The maximum concurrency limit number, no limitation if it's set to 0.
+   */
+  concurrency: number;
 }
 
 export class TaskPool extends EventEmitter {
-  private readonly DEFAULT_POOL_SIZE = 30;
+  private readonly DEFAULT_CONCURRENCY = 30;
 
   private tasks: Task[] = [];
 
-  private size: number = this.DEFAULT_POOL_SIZE;
+  private concurrency: number;
 
   private resolutions: any[] = [];
 
@@ -43,11 +46,10 @@ export class TaskPool extends EventEmitter {
       }
     }
 
-    if (options) {
-      this.size = options?.size || this.size;
+    this.concurrency = options?.concurrency || this.DEFAULT_CONCURRENCY;
+    if (typeof this.concurrency !== 'number' || this.concurrency < 0) {
+      throw new TypeError('Invalid concurrency number');
     }
-
-    this.checkOptions();
 
     this.on('done', this.nextTask);
   }
@@ -75,12 +77,6 @@ export class TaskPool extends EventEmitter {
     this.checkRunningState();
 
     return this.run();
-  }
-
-  private checkOptions() {
-    if (this.size <= 0) {
-      throw new Error('Wrong task pool size');
-    }
   }
 
   private runTask(index: number) {
@@ -132,7 +128,7 @@ export class TaskPool extends EventEmitter {
       });
 
       for (let i = 0; i < this.tasks.length; i += 1) {
-        if (this.running.size >= this.size) {
+        if (this.running.size >= this.concurrency) {
           this.queue.push(i);
         } else {
           this.runTask(i);
