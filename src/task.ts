@@ -15,7 +15,7 @@ export class Task {
   /**
    * Executes function with specific arguments.
    */
-  async exec() {
+  exec() {
     return this.func(...this.args);
   }
 
