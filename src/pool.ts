@@ -128,7 +128,7 @@ export class TaskPool extends EventEmitter {
       });
 
       for (let i = 0; i < this.tasks.length; i += 1) {
-        if (this.running.size >= this.concurrency) {
+        if (this.concurrency > 0 && this.running.size >= this.concurrency) {
           this.queue.push(i);
         } else {
           this.runTask(i);
