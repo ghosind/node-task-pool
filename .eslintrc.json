@@ -4,7 +4,7 @@
     "node": true
   },
   "extends": [
-    "airbnb-base"
+    "eslint-config-ghosind"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -15,32 +15,6 @@
     "@typescript-eslint"
   ],
   "rules": {
-    "complexity": [
-      "warn",
-      11
-    ],
-    "import/extensions": [
-      "error",
-      "ignorePackages",
-      {
-        "js": "never",
-        "ts": "never"
-      }
-    ],
-    "import/prefer-default-export": "off",
-    "max-depth": [
-      "warn",
-      4
-    ],
-    "max-lines-per-function": [
-      "warn",
-      {
-        "max": 50,
-        "skipBlankLines": true,
-        "skipComments": true,
-        "IIFEs": true
-      }
-    ]
   },
   "settings": {
     "import/resolver": {
