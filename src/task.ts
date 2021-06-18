@@ -4,11 +4,25 @@ export class Task {
   private args: any[];
 
   constructor(func: Function, ...args: any[]) {
+    if (typeof func !== 'function') {
+      throw new TypeError('Invalid function');
+    }
+
     this.func = func;
-    this.args = args;
+    this.args = args || [];
   }
 
-  exec() {
+  /**
+   * Executes function with specific arguments.
+   */
+  async exec() {
     return this.func(...this.args);
+  }
+
+  /**
+   * Sets function arguments.
+   */
+  setArgs(args: any[]) {
+    this.args = args || [];
   }
 }
