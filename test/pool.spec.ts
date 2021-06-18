@@ -7,7 +7,7 @@ import { Task, TaskPool } from '../src';
 describe('Pool class test', () => {
   it('wrong pool size', () => {
     assert.throws(() => {
-      const pool = new TaskPool({ size: -1 });
+      const pool = new TaskPool({ concurrency: -1 });
       pool.exec();
     });
   });
@@ -174,7 +174,7 @@ describe('Pool class test', () => {
       tasks.push(new Task(func, i));
     }
 
-    const pool = new TaskPool(tasks, { size: 2 });
+    const pool = new TaskPool(tasks, { concurrency: 2 });
 
     const ret = await pool.exec();
     assert.deepStrictEqual(ret, [0, 1, 2, 3, 4]);
