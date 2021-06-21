@@ -135,6 +135,10 @@ pool.exec().then((data) => console.log(data));
 
   Execute all tasks in the pool, and it'll return a result array after executing.
 
+- `setConcurrency(concurrency: number): void`
+
+  Set concurrency limits.
+
 ### Class `Task`
 
 - `exec(): any`

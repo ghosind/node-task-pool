@@ -3,7 +3,8 @@ import { Task } from './task';
 
 interface TaskPoolOptions {
   /**
-   * The maximum concurrency limit number, no limitation if it's set to 0.
+   * A positive number or zero to indicates maximum concurrency limit number, no limitation if it's
+   * set to 0 (similar with `Promise.all()`).
    */
   concurrency: number;
 }
@@ -25,16 +26,23 @@ export class TaskPool extends EventEmitter {
 
   constructor();
 
+  /**
+   * @param options Task pool configurations.
+   */
   // eslint-disable-next-line no-unused-vars
   constructor(options: TaskPoolOptions);
 
+  /**
+   * @param tasks A task or task list.
+   * @param options Task pool configurations.
+   */
   // eslint-disable-next-line no-unused-vars
   constructor(tasks: Task | Task[], options?: TaskPoolOptions);
 
-  constructor(tasks?: Task | Task[] | TaskPoolOptions, optionsParam?: TaskPoolOptions) {
+  constructor(tasks?: Task | Task[] | TaskPoolOptions, optionParams?: TaskPoolOptions) {
     super();
 
-    let options = optionsParam;
+    let options = optionParams;
 
     if (tasks) {
       if (tasks instanceof Task) {
@@ -54,6 +62,10 @@ export class TaskPool extends EventEmitter {
     this.on('done', this.nextTask);
   }
 
+  /**
+   * Add a task or tasks array into pool.
+   * @param task Task instance or task instances array.
+   */
   addTask(task: Task | Task[]) {
     if (task instanceof Task) {
       this.tasks.push(task);
@@ -69,7 +81,11 @@ export class TaskPool extends EventEmitter {
     }
   }
 
-  async exec() {
+  /**
+   * Execute all tasks in the pool.
+   * @async
+   */
+  async exec(): Promise<any[]> {
     if (this.tasks.length === 0) {
       return this.resolutions;
     }
@@ -77,6 +93,18 @@ export class TaskPool extends EventEmitter {
     this.checkRunningState();
 
     return this.run();
+  }
+
+  /**
+   * Set concurrency limits.
+   * @param concurrency The maximum concurrency tasks number.
+   */
+  setConcurrency(concurrency: number) {
+    if (typeof concurrency !== 'number' || concurrency < 0) {
+      throw new TypeError('Invalid concurrency number');
+    }
+
+    this.concurrency = concurrency;
   }
 
   private runTask(index: number) {

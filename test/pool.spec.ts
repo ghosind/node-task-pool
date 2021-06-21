@@ -163,21 +163,45 @@ describe('Pool class test', () => {
   });
 
   it('execute with limited concurrency (pool size)', async () => {
+    const finishSeq: number[] = [];
     const func = (val: number) => new Promise((resolve: Function) => {
       setTimeout(() => {
+        finishSeq.push(val);
         resolve(val);
-      }, 100);
+      }, 100 * val);
     });
     const tasks: Task[] = [];
 
-    for (let i = 0; i < 5; i += 1) {
-      tasks.push(new Task(func, i));
-    }
+    [6, 5, 4, 2, 0].forEach((val: number) => { tasks.push(new Task(func, val)); });
 
     const pool = new TaskPool(tasks, { concurrency: 2 });
 
     const ret = await pool.exec();
-    assert.deepStrictEqual(ret, [0, 1, 2, 3, 4]);
+
+    assert.deepStrictEqual(finishSeq, [5, 6, 2, 0, 4]);
+    assert.deepStrictEqual(ret, [6, 5, 4, 2, 0]);
+  });
+
+  it('reset concurrency and execute', async () => {
+    const finishSeq: number[] = [];
+    const func = (val: number) => new Promise((resolve: Function) => {
+      setTimeout(() => {
+        finishSeq.push(val);
+        resolve(val);
+      }, 100 * val);
+    });
+    const tasks: Task[] = [];
+
+    [6, 5, 4, 3, 0].forEach((val: number) => { tasks.push(new Task(func, val)); });
+
+    const pool = new TaskPool(tasks, { concurrency: 2 });
+
+    pool.setConcurrency(3);
+
+    const ret = await pool.exec();
+
+    assert.deepStrictEqual(finishSeq, [4, 5, 0, 6, 3]);
+    assert.deepStrictEqual(ret, [6, 5, 4, 3, 0]);
   });
 
   it('add a task', async () => {
