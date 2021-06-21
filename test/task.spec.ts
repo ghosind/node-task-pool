@@ -4,6 +4,16 @@ import assert from 'assert';
 import { Task } from '../src';
 
 describe('Task class test', () => {
+  it('invalid function', () => {
+    const func = null;
+    assert.throws(() => {
+      // @ts-ignore
+      const task = new Task(func);
+
+      task.exec();
+    });
+  });
+
   it('no argument task', () => {
     const func = () => 'result';
     const task = new Task(func);
@@ -48,5 +58,16 @@ describe('Task class test', () => {
     const ret = await task.exec();
 
     assert.strictEqual(ret, 'Hello Node.js');
+  });
+
+  it('reset arguments', () => {
+    const func = (val: number) => val;
+    const task = new Task(func, 1);
+
+    task.setArgs(2);
+
+    const ret = task.exec();
+
+    assert.strictEqual(ret, 2);
   });
 });

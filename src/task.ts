@@ -22,7 +22,7 @@ export class Task {
   /**
    * Sets function arguments.
    */
-  setArgs(args: any[]) {
+  setArgs(...args: any[]) {
     this.args = args || [];
   }
 }
