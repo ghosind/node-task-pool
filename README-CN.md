@@ -9,31 +9,33 @@
 
 `@antmind/task-pool` is a simple Node.js functional tasks pool implementation, supported both synchronous and asynchronous functions.
 
-## Installation
+`@antmind/task-pool`是一个简单的Node.js函数任务池实现，实现了对同步、异步方法的并发控制支持。
 
-- Using NPM:
+## 安装
+
+- 通过NPM:
 
   ```sh
   npm install --save @antmind/task-pool
   ```
 
-- Using Yarn:
+- 通过Yarn:
 
   ```sh
   yarn add @antmind/task-pool
   ```
 
-## Getting Started
+## 简单使用
 
-1. Import `TaskPool` and `Task` from `@antmind/task-pool`.
+1. 导入`@antmind/task-pool`包中的`TaskPool`以及`Task`。
 
-2. Create a new task pool instance, and you can set concurrency limit if you need.
+2. 建立任务池，并根据需求设置并发限制数量（未设置默认为`30`）。
 
-3. Create tasks instance and add them into task pool.
+3. 创建任务实例并添加到任务池
 
-4. Call `exec()` method to execute functions.
+4. 调用`exec()`方法执行任务池中的任务。
 
-### Example
+### 示例
 
 ```ts
 import { Task, TaskPool } from '@antmind/task-pool';
@@ -49,9 +51,11 @@ pool.exec().then((data: any) => console.log(data));
 // [ 5, 4, 3, 2, 1 ]
 ```
 
-## Concurrency Control
+## 并发控制
 
-You can limit the task concurrency number by `concurrency` option, and this value must equal or greater than `0`.
+You can limit the task concurrency number by `concurrency` option, and this value must equal or great than `0`.
+
+在实例化任务池`TaskPool`时可通过`options`参数中的`concurrency`控制并发数，该值必须设置为大于等于0的整数。
 
 ```ts
 import { Task, TaskPool } from '@antmind/task-pool';
@@ -84,9 +88,9 @@ pool.exec().then((data) => console.log(data));
 // [ 5, 4, 3, 2, 1 ]
 ```
 
-### Unlimited concurrency mode
+### 无限制模式
 
-You can set `concurrency` option as `0` to enable unlimited concurrency mode, it's similar with `Promise.all`.
+若将`concurrency`的值设置为`0`，则代表无并发数量限制，执行效果等同于`Promise.all()`。
 
 ```ts
 import { Task, TaskPool } from '@antmind/task-pool';
@@ -119,36 +123,36 @@ pool.exec().then((data) => console.log(data));
 // [ 5, 4, 3, 2, 1 ]
 ```
 
-## Configurations
+## 配置设置
 
-- `concurrency`: The tasks maximum concurrency limit number, it should be a integer number greater or equals to `0`, and the default value is `30`. Set this option value to `0` to enable unlimited concurrency mode.
+- `concurrency`: 最大并发任务数，需要为大于等于0的整数值，默认值为`30`。若设置为`0`则等同于执行`Promise.all()`。
 
 ## APIs
 
-### Class `TaskPool`
+### `TaskPool`类
 
 - `addTask(task: Task | Task[]): void`
 
-  Add a task or tasks array into task pool.
+  将一个或多个任务实例添加到任务池中。
 
 - `exec(): Promise<any[]>`
 
-  Execute all tasks in the pool, and it'll return a result array after executing.
+  执行任务池中的任务。
 
 - `setConcurrency(concurrency: number): void`
 
-  Set concurrency limits.
+  设置最大并发数。
 
-### Class `Task`
+### `Task`类
 
 - `exec(): any`
 
-  Execute this task.
+  执行任务并返回执行结果。
 
 - `setArgs(...args: any[]): void`
 
-  Set function arguments.
+  重新设置任务参数。
 
-## License
+## 协议
 
-This project has been published under MIT license, you can get more detail in `LICENSE` file.
+本项目使用`MIT`协议发布，可查看`LICENSE`文件获取更多信息。
