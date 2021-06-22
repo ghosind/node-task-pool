@@ -143,7 +143,7 @@ describe('Pool class test', () => {
     assert.deepStrictEqual(result, [1, 3, 0, 2, 4]);
   });
 
-  it('re-run when pool is running', () => {
+  it('re-execute when pool is running', async () => {
     const func = () => new Promise((resolve: Function) => {
       setTimeout(() => {
         resolve();
@@ -151,7 +151,7 @@ describe('Pool class test', () => {
     });
     const pool = new TaskPool(new Task(func));
     pool.exec();
-    assert.rejects(pool.exec);
+    assert.rejects(async () => { await pool.exec(); });
   });
 
   it('throw error inside pool', async () => {
