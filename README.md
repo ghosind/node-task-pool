@@ -123,6 +123,8 @@ pool.exec().then((data) => console.log(data));
 
 - `concurrency`: The tasks maximum concurrency limit number, it should be a integer number greater or equals to `0`, and the default value is `30`. Set this option value to `0` to enable unlimited concurrency mode.
 
+- `throwsError`: Throw error when some task failed if this option set to `true`, and do not throw error if set to `false` (you can get errors by `getErrors()` method). The default value is `true`.
+
 ## APIs
 
 ### Class `TaskPool`

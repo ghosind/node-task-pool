@@ -12,6 +12,13 @@ describe('Pool class test', () => {
     });
   });
 
+  it('set invalid concurrency', () => {
+    const pool = new TaskPool();
+    assert.throws(() => {
+      pool.setConcurrency(-1);
+    });
+  });
+
   it('empty pool execution', async () => {
     const pool = new TaskPool([]);
     const ret = await pool.exec();
@@ -252,5 +259,47 @@ describe('Pool class test', () => {
       // @ts-ignore
       pool.addTask([null]);
     });
+  });
+
+  it('throw error when some task failed', async () => {
+    const executed: number[] = [];
+    const func = (val: number) => {
+      executed.push(val);
+      if (val === 2) {
+        throw new Error('Test');
+      }
+      return val;
+    };
+
+    const pool = new TaskPool();
+    for (let i = 0; i < 5; i += 1) {
+      pool.addTask(new Task(func, i));
+    }
+
+    assert.rejects(async () => {
+      await pool.exec();
+    });
+    assert.deepStrictEqual(executed, [0, 1, 2]);
+  });
+
+  it('shouldn\'t throw errors and set lastErrors when some tasks failed', async () => {
+    const executed: number[] = [];
+    const func = (val: number) => {
+      executed.push(val);
+      if (val === 2) {
+        throw new Error('!!!');
+      }
+      return val;
+    };
+
+    const pool = new TaskPool({ throwsError: false });
+    for (let i = 0; i < 5; i += 1) {
+      pool.addTask(new Task(func, i));
+    }
+
+    await assert.doesNotReject(async () => {
+      await pool.exec();
+    });
+    assert.deepStrictEqual(executed, [0, 1, 2, 3, 4]);
   });
 });

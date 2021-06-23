@@ -6,7 +6,12 @@ interface TaskPoolOptions {
    * A positive number or zero to indicates maximum concurrency limit number, no limitation if it's
    * set to 0 (similar with `Promise.all()`).
    */
-  concurrency: number;
+  concurrency?: number;
+
+  /**
+   * Is throws error and terminates tasks if some task threw error, default true.
+   */
+  throwsError?: boolean;
 }
 
 export class TaskPool extends EventEmitter {
@@ -16,7 +21,11 @@ export class TaskPool extends EventEmitter {
 
   private concurrency: number;
 
+  private throwsError: boolean;
+
   private resolutions: any[] = [];
+
+  private errors: Array<Error | undefined> = [];
 
   private isRunning: boolean = false;
 
@@ -57,6 +66,12 @@ export class TaskPool extends EventEmitter {
     this.concurrency = options?.concurrency || this.DEFAULT_CONCURRENCY;
     if (typeof this.concurrency !== 'number' || this.concurrency < 0) {
       throw new TypeError('Invalid concurrency number');
+    }
+
+    if (typeof options?.throwsError === 'boolean') {
+      this.throwsError = options.throwsError;
+    } else {
+      this.throwsError = true;
     }
 
     this.on('done', this.nextTask);
@@ -107,6 +122,13 @@ export class TaskPool extends EventEmitter {
     this.concurrency = concurrency;
   }
 
+  /**
+   * Gets execution errors of last time.
+   */
+  getErrors() {
+    return [...this.errors];
+  }
+
   private runTask(index: number) {
     if (index >= this.tasks.length) {
       throw new Error('Invalid task');
@@ -116,16 +138,20 @@ export class TaskPool extends EventEmitter {
 
     this.running.add(index);
 
-    Promise.resolve(task.exec()).then(
-      (res: any) => {
-        this.running.delete(index);
-        this.resolutions[index] = res;
-        this.emit('done');
-      },
-      (err: any) => {
-        this.emit('error', err);
-      },
-    );
+    try {
+      Promise.resolve(task.exec()).then(
+        (res: any) => {
+          this.running.delete(index);
+          this.resolutions[index] = res;
+          this.emit('done');
+        },
+        (err: any) => {
+          this.handleError(err, index);
+        },
+      );
+    } catch (err: any) {
+      this.handleError(err, index);
+    }
   }
 
   private nextTask() {
@@ -143,6 +169,10 @@ export class TaskPool extends EventEmitter {
     this.running.clear();
     this.queue = [];
     this.isRunning = true;
+
+    // clear last resolutions and errors
+    this.resolutions = [];
+    this.errors = [];
 
     // eslint-disable-next-line no-unused-vars
     return new Promise((resolve: (value: any) => any, reject: (reason: any) => any) => {
@@ -168,6 +198,16 @@ export class TaskPool extends EventEmitter {
   private checkRunningState() {
     if (this.isRunning) {
       throw new Error('Task pool is executing');
+    }
+  }
+
+  private handleError(err: any, index: number) {
+    if (this.throwsError) {
+      this.emit('error', err);
+    } else {
+      this.running.delete(index);
+      this.errors[index] = err;
+      this.emit('done');
     }
   }
 }
