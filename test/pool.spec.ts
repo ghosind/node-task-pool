@@ -220,11 +220,12 @@ describe('Pool class test', () => {
     const tasks: Task[] = [new Task(func, 0)];
     const pool = new TaskPool(tasks);
 
-    pool.addTask(new Task(func, 1));
+    const id = pool.addTask(new Task(func, 1));
 
     const ret = await pool.exec();
 
     assert.deepStrictEqual(ret, [0, 1]);
+    assert.strictEqual(id, 1);
   });
 
   it('add an invalid task', async () => {
@@ -245,11 +246,12 @@ describe('Pool class test', () => {
     const tasks: Task[] = [new Task(func, 0)];
     const pool = new TaskPool(tasks);
 
-    pool.addTask([new Task(func, 1), new Task(func, 2)]);
+    const ids = pool.addTask([new Task(func, 1), new Task(func, 2)]);
 
     const ret = await pool.exec();
 
     assert.deepStrictEqual(ret, [0, 1, 2]);
+    assert.deepStrictEqual(ids, [1, 2]);
   });
 
   it('add an invalid array', async () => {

@@ -133,9 +133,9 @@ pool.exec().then((data) => console.log(data));
 
 ### `TaskPool`类
 
-- `addTask(task: Task | Task[]): void`
+- `addTask(task: Task | Task[]): number | number[]`
 
-  将一个或多个任务实例添加到任务池中。
+  将一个或多个任务实例添加到任务池中，并返回任务对应的id。
 
 - `exec(): Promise<any[]>`
 

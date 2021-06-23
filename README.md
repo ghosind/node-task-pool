@@ -129,9 +129,9 @@ pool.exec().then((data) => console.log(data));
 
 ### Class `TaskPool`
 
-- `addTask(task: Task | Task[]): void`
+- `addTask(task: Task | Task[]): number | number[]`
 
-  Add a task or tasks array into task pool.
+  Add a task or tasks array into task pool, and it'll return the task id or tasks' id.
 
 - `exec(): Promise<any[]>`
 
