@@ -146,6 +146,7 @@ export class TaskPool extends EventEmitter {
           this.emit('done');
         },
         (err: any) => {
+          this.running.delete(index);
           this.handleError(err, index);
         },
       );
@@ -177,6 +178,7 @@ export class TaskPool extends EventEmitter {
     // eslint-disable-next-line no-unused-vars
     return new Promise((resolve: (value: any) => any, reject: (reason: any) => any) => {
       this.on('error', (err: any) => {
+        this.isRunning = false;
         reject(err);
       });
 
@@ -203,6 +205,7 @@ export class TaskPool extends EventEmitter {
 
   private handleError(err: any, index: number) {
     if (this.throwsError) {
+      this.queue = [];
       this.emit('error', err);
     } else {
       this.running.delete(index);

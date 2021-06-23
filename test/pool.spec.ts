@@ -263,20 +263,22 @@ describe('Pool class test', () => {
 
   it('throw error when some task failed', async () => {
     const executed: number[] = [];
-    const func = (val: number) => {
+    const func = (val: number) => new Promise((resolve: Function, reject: Function) => {
       executed.push(val);
-      if (val === 2) {
-        throw new Error('Test');
-      }
-      return val;
-    };
+      setTimeout(() => {
+        if (val === 2) {
+          reject(new Error());
+        }
+        resolve(val);
+      }, val * 100);
+    });
 
-    const pool = new TaskPool();
+    const pool = new TaskPool({ concurrency: 1, throwsError: true });
     for (let i = 0; i < 5; i += 1) {
       pool.addTask(new Task(func, i));
     }
 
-    assert.rejects(async () => {
+    await assert.rejects(async () => {
       await pool.exec();
     });
     assert.deepStrictEqual(executed, [0, 1, 2]);
@@ -284,15 +286,17 @@ describe('Pool class test', () => {
 
   it('shouldn\'t throw errors and set lastErrors when some tasks failed', async () => {
     const executed: number[] = [];
-    const func = (val: number) => {
+    const func = (val: number) => new Promise((resolve: Function, reject: Function) => {
       executed.push(val);
-      if (val === 2) {
-        throw new Error('!!!');
-      }
-      return val;
-    };
+      setTimeout(() => {
+        if (val === 2) {
+          reject(new Error());
+        }
+        resolve(val);
+      }, val * 100);
+    });
 
-    const pool = new TaskPool({ throwsError: false });
+    const pool = new TaskPool({ concurrency: 1, throwsError: false });
     for (let i = 0; i < 5; i += 1) {
       pool.addTask(new Task(func, i));
     }
@@ -301,5 +305,15 @@ describe('Pool class test', () => {
       await pool.exec();
     });
     assert.deepStrictEqual(executed, [0, 1, 2, 3, 4]);
+
+    const errors = pool.getErrors();
+    assert.ok(errors instanceof Array);
+    for (let i = 0; i < 5; i += 1) {
+      if (i === 2) {
+        assert.ok(errors[i] instanceof Error);
+      } else {
+        assert.ok(errors[i] === undefined);
+      }
+    }
   });
 });
