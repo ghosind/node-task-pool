@@ -149,6 +149,10 @@ pool.exec().then((data) => console.log(data));
 
   获得上次执行产生的错误，错误在数组中的索引对应于任务添加的顺序。
 
+- `getTask(id: number): Task | null`
+
+  根据id获得对应的任务。
+
 ### `Task`类
 
 - `exec(): any`

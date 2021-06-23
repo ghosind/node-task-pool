@@ -263,6 +263,17 @@ describe('Pool class test', () => {
     });
   });
 
+  it('get task in pool', () => {
+    const func = (val: number) => val;
+    const task = new Task(func, 1);
+
+    const pool = new TaskPool();
+
+    const id: number = pool.addTask(task) as number;
+    assert.deepStrictEqual(pool.getTask(id), task);
+    assert.deepStrictEqual(pool.getTask(id + 1), null);
+  });
+
   it('throw error when some task failed', async () => {
     const executed: number[] = [];
     const func = (val: number) => new Promise((resolve: Function, reject: Function) => {

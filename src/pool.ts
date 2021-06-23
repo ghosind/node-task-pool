@@ -137,6 +137,10 @@ export class TaskPool extends EventEmitter {
     return [...this.errors];
   }
 
+  getTask(id: number) {
+    return id in this.tasks ? this.tasks[id] : null;
+  }
+
   private runTask(index: number) {
     if (index >= this.tasks.length) {
       throw new Error('Invalid task');

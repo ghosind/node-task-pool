@@ -145,6 +145,10 @@ pool.exec().then((data) => console.log(data));
 
   Get errors of last execution, and the index of error is same as task index.
 
+- `getTask(id: number): Task | null`
+
+  Get task by id.
+
 ### Class `Task`
 
 - `exec(): any`
