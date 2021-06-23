@@ -141,6 +141,10 @@ pool.exec().then((data) => console.log(data));
 
   Set concurrency limits.
 
+- `getErrors(): Array<Error | undefined>`
+
+  Get errors of last execution, and the index of error is same as task index.
+
 ### Class `Task`
 
 - `exec(): any`

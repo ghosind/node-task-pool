@@ -127,6 +127,8 @@ pool.exec().then((data) => console.log(data));
 
 - `concurrency`: 最大并发任务数，需要为大于等于0的整数值，默认值为`30`。若设置为`0`则等同于执行`Promise.all()`。
 
+- `throwsError`: 当任务执行失败（发生错误）时，是否抛出错误，默认为`true`。若设置为`false`，程序将继续执行直到所有任务都执行完成，并保存所有错误信息（可通过`getErrors()`方法获得。
+
 ## APIs
 
 ### `TaskPool`类
@@ -142,6 +144,10 @@ pool.exec().then((data) => console.log(data));
 - `setConcurrency(concurrency: number): void`
 
   设置最大并发数。
+
+- `getErrors(): Promise<Error | undefined>`
+
+  获得上次执行产生的错误，错误在数组中的索引对应于任务添加的顺序。
 
 ### `Task`类
 
