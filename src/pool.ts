@@ -81,27 +81,41 @@ export class TaskPool extends EventEmitter {
    * Add a task or tasks array into pool.
    * @param task Task instance or task instances array.
    */
-  addTask(task: Task | Task[]) {
+  addTask(task: Task) {
     if (task instanceof Task) {
       const length = this.tasks.push(task);
       return length - 1;
     }
 
-    if (task instanceof Array) {
-      const ids: number[] = [];
-      task.forEach((t: Task) => {
-        if (!(t instanceof Task)) {
-          throw new TypeError('Invalid task');
-        }
-        const length = this.tasks.push(t);
-        ids.push(length - 1);
-      });
-
-      return ids;
-    }
-
     // throw error if params is not a task or a tasks array.
     throw new TypeError('Invalid task(s)');
+  }
+
+  /**
+   * Add tasks array into pool.
+   * @param tasks Task instances array.
+   */
+  addTasks(tasks: Task | Task[]) {
+    let taskArr: Task[];
+
+    if (tasks instanceof Array) {
+      taskArr = tasks;
+    } else if (tasks instanceof Task) {
+      taskArr = [tasks];
+    } else {
+      throw new TypeError('Invalid task(s)');
+    }
+
+    const ids: number[] = [];
+    taskArr.forEach((t: Task) => {
+      if (!(t instanceof Task)) {
+        throw new TypeError('Invalid task');
+      }
+      const length = this.tasks.push(t);
+      ids.push(length - 1);
+    });
+
+    return ids;
   }
 
   /**

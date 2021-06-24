@@ -212,11 +212,7 @@ describe('Pool class test', () => {
   });
 
   it('add a task', async () => {
-    const func = (val: number) => new Promise((resolve: Function) => {
-      setTimeout(() => {
-        resolve(val);
-      }, 100);
-    });
+    const func = (val: number) => val;
     const tasks: Task[] = [new Task(func, 0)];
     const pool = new TaskPool(tasks);
 
@@ -238,15 +234,11 @@ describe('Pool class test', () => {
   });
 
   it('add a task array', async () => {
-    const func = (val: number) => new Promise((resolve: Function) => {
-      setTimeout(() => {
-        resolve(val);
-      }, 100);
-    });
+    const func = (val: number) => val;
     const tasks: Task[] = [new Task(func, 0)];
     const pool = new TaskPool(tasks);
 
-    const ids = pool.addTask([new Task(func, 1), new Task(func, 2)]);
+    const ids = pool.addTasks([new Task(func, 1), new Task(func, 2)]);
 
     const ret = await pool.exec();
 
@@ -259,7 +251,25 @@ describe('Pool class test', () => {
 
     assert.throws(() => {
       // @ts-ignore
-      pool.addTask([null]);
+      pool.addTasks([null]);
+    });
+  });
+
+  it('add a task use addTasks', async () => {
+    const task = new Task((val: number) => val, 1);
+    const pool = new TaskPool();
+
+    assert.doesNotThrow(() => {
+      pool.addTasks(task);
+    });
+  });
+
+  it('add an invalid value use addTasks', async () => {
+    const pool = new TaskPool();
+
+    assert.throws(() => {
+      // @ts-ignore
+      pool.addTasks(null);
     });
   });
 

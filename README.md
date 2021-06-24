@@ -129,13 +129,17 @@ pool.exec().then((data) => console.log(data));
 
 ### Class `TaskPool`
 
-- `addTask(task: Task | Task[]): number | number[]`
-
-  Add a task or tasks array into task pool, and it'll return the task id or tasks' id.
-
 - `exec(): Promise<any[]>`
 
   Execute all tasks in the pool, and it'll return a result array after executing.
+
+- `addTask(task: Task): number`
+
+  Add a task into task pool, and it'll return the task id.
+
+- `addTasks(tasks: Task[]): number[]`
+  
+  Add a tasks array into task pool, and it'll return the tasks' id.
 
 - `setConcurrency(concurrency: number): void`
 
