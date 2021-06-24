@@ -7,8 +7,6 @@
 [![codecov](https://codecov.io/gh/ghosind/node-task-pool/branch/main/graph/badge.svg?token=UZ7SOSC9RH)](https://codecov.io/gh/ghosind/node-task-pool)
 [![License](https://img.shields.io/github/license/ghosind/node-task-pool)](https://github.com/ghosind/node-task-pool)
 
-`@antmind/task-pool` is a simple Node.js functional tasks pool implementation, supported both synchronous and asynchronous functions.
-
 `@antmind/task-pool`是一个简单的Node.js函数任务池实现，实现了对同步、异步方法的并发控制支持。
 
 ## 安装
