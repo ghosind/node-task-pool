@@ -131,6 +131,8 @@ pool.exec().then((data) => console.log(data));
 
 ## APIs
 
+### `TaskPool`类
+
 #### 构造函数
 
 - `constructor()`
@@ -140,8 +142,6 @@ pool.exec().then((data) => console.log(data));
 - `constructor(task: Task | Task[], options?: TaskPoolOptions)`
 
 #### 类方法
-
-### `TaskPool`类
 
 - `exec(): Promise<any[]>`
 
