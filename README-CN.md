@@ -7,6 +7,8 @@
 [![codecov](https://codecov.io/gh/ghosind/node-task-pool/branch/main/graph/badge.svg?token=UZ7SOSC9RH)](https://codecov.io/gh/ghosind/node-task-pool)
 [![License](https://img.shields.io/github/license/ghosind/node-task-pool)](https://github.com/ghosind/node-task-pool)
 
+[English](README.md) | 简体中文
+
 `@antmind/task-pool`是一个简单的Node.js函数任务池实现，实现了对同步、异步方法的并发控制支持。
 
 ## 安装
@@ -129,6 +131,16 @@ pool.exec().then((data) => console.log(data));
 
 ## APIs
 
+#### 构造函数
+
+- `constructor()`
+
+- `constructor(options: TaskPoolOptions)`
+
+- `constructor(task: Task | Task[], options?: TaskPoolOptions)`
+
+#### 类方法
+
 ### `TaskPool`类
 
 - `exec(): Promise<any[]>`
@@ -156,6 +168,12 @@ pool.exec().then((data) => console.log(data));
   根据id获得对应的任务。
 
 ### `Task`类
+
+#### 构造函数
+
+- `constructor(func: Function, ...args: any[])`
+
+#### 类方法
 
 - `exec(): any`
 

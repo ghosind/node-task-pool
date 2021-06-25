@@ -7,6 +7,8 @@
 [![codecov](https://codecov.io/gh/ghosind/node-task-pool/branch/main/graph/badge.svg?token=UZ7SOSC9RH)](https://codecov.io/gh/ghosind/node-task-pool)
 [![License](https://img.shields.io/github/license/ghosind/node-task-pool)](https://github.com/ghosind/node-task-pool)
 
+English | [简体中文](README-CN.md)
+
 `@antmind/task-pool` is a simple Node.js functional tasks pool implementation, supported both synchronous and asynchronous functions.
 
 ## Installation
@@ -129,6 +131,16 @@ pool.exec().then((data) => console.log(data));
 
 ### Class `TaskPool`
 
+#### Constructor
+
+- `constructor()`
+
+- `constructor(options: TaskPoolOptions)`
+
+- `constructor(task: Task | Task[], options?: TaskPoolOptions)`
+
+#### Methods
+
 - `exec(): Promise<any[]>`
 
   Execute all tasks in the pool, and it'll return a result array after executing.
@@ -154,6 +166,12 @@ pool.exec().then((data) => console.log(data));
   Get task by id.
 
 ### Class `Task`
+
+#### Constructor
+
+- `constructor(func: Function, ...args: any[])`
+
+#### Method
 
 - `exec(): any`
 

@@ -151,6 +151,9 @@ export class TaskPool extends EventEmitter {
     return [...this.errors];
   }
 
+  /**
+   * Get task instance by it's id.
+   */
   getTask(id: number) {
     return id in this.tasks ? this.tasks[id] : null;
   }
