@@ -1,6 +1,6 @@
 {
   "name": "@antmind/task-pool",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "A simple Node.js functional tasks pool implementation, supported both synchronous and asynchronous functions.",
   "main": "./lib/index.js",
   "scripts": {
