@@ -46,5 +46,18 @@
     "lib": "lib",
     "test": "test"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "files": [
+    "lib",
+    "src",
+    "test",
+    ".gitignore",
+    ".mocharc.json",
+    "package-lock.json",
+    "package.json",
+    "LICENSE",
+    "README-CN.md",
+    "README.md",
+    "tsconfig.json"
+  ]
 }
